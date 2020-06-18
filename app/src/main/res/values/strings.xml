@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Delete Sent SMSs</string>
+
+    <string-array name="unidad_tiempo">
+        <item>Segundos</item>
+        <item>Minutos</item>
+    </string-array>
 </resources>

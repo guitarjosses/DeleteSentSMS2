@@ -8,18 +8,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Telephony;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.Switch;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     String gDefaultSmsApp;
 
     private static final int PERMISSION_REQUEST_SMS = 123;
 
+    private int indiceSpinnerUT = 0;
+
     private Switch s1;
+    private Spinner spinnerUT;
+    private NumberPicker npTiempo;
 
     private Handler mHandler = new Handler();
 
@@ -38,8 +47,17 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        s1 = (Switch) findViewById(R.id.switch1);
+        spinnerUT = findViewById(R.id.spiUnidadTiempo);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.unidad_tiempo,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerUT.setAdapter(adapter);
+        spinnerUT.setOnItemSelectedListener(this);
 
+        npTiempo = findViewById(R.id.npTiempo);
+        npTiempo.setMinValue(10);
+        npTiempo.setMaxValue(60);
+
+        s1 = (Switch) findViewById(R.id.switch1);
         s1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean activo) {
@@ -52,11 +70,17 @@ public class MainActivity extends AppCompatActivity {
                             getPackageName());
                     startActivityForResult(setSmsAppIntent, PERMISSION_REQUEST_SMS);
 
+                    spinnerUT.setEnabled(false);
+                    npTiempo.setEnabled(false);
+
                     mProgramarTarea.run();
 
                 }else{
 
                     mHandler.removeCallbacks(mProgramarTarea);
+
+                    spinnerUT.setEnabled(true);
+                    npTiempo.setEnabled(true);
 
                 }
 
@@ -68,8 +92,16 @@ public class MainActivity extends AppCompatActivity {
     private Runnable mProgramarTarea = new Runnable() {
         @Override
         public void run() {
+
+            int milisegundos = 10000;
+
+            if(spinnerUT.getSelectedItemPosition()==0){
+                milisegundos = npTiempo.getValue()*1000;
+            }else{
+                milisegundos = npTiempo.getValue()*60000;
+            }
             borrarMensajes();
-            mHandler.postDelayed(this,10000);
+            mHandler.postDelayed(this,milisegundos);
 
         }
     };
@@ -113,9 +145,25 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
-
+            System.out.println("UM: " + spinnerUT.getSelectedItemPosition() + " Tiempo: " + npTiempo.getValue());
         }
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+        if(spinnerUT.getSelectedItemPosition()==0){
+            npTiempo.setMinValue(10);
+        }else{
+            npTiempo.setMinValue(1);
+        }
+        npTiempo.setValue(npTiempo.getMinValue());
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }
