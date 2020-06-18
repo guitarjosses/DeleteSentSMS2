@@ -30,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
 
+        Intent setSmsAppIntent =
+                new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+        setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+                getPackageName());
+        startActivityForResult(setSmsAppIntent, PERMISSION_REQUEST_SMS);
+
             String defaultSmsApp = Telephony.Sms.getDefaultSmsPackage(getApplicationContext());
             gDefaultSmsApp = defaultSmsApp;
 
@@ -43,21 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
                 if(activo){
 
-                    Intent setSmsAppIntent =
-                            new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-                    setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
-                            getPackageName());
-                    startActivityForResult(setSmsAppIntent, PERMISSION_REQUEST_SMS);
-
                     mProgramarTarea.run();
 
                 }else{
 
                     mHandler.removeCallbacks(mProgramarTarea);
-
-                    Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-                    intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, gDefaultSmsApp);
-                    startActivity(intent);
 
                 }
 
@@ -112,5 +108,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
 }
