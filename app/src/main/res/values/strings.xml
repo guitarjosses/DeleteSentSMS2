@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Delete Sent SMSs</string>
+    <string name="app_name">DILAN CALEB DELETE</string>
+    <string name="username">Digite Usuario</string>
+    <string name="password">Digite Contraseña</string>
+    <string name="Entrar">Entrar</string>
 
     <string-array name="unidad_tiempo">
         <item>Segundos</item>
