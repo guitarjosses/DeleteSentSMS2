@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
         CargarCredenciales();
 
-        if(usuarioGuardado == "Caleb dylan" & contraseniaGuardada == "michalydylan1988"){
+        if(usuarioGuardado.equals("Caleb dylan") & contraseniaGuardada.equals("michalydylan1988")){
             Intent a = new Intent(getApplicationContext(),MainActivity.class);
             startActivity(a);
 
