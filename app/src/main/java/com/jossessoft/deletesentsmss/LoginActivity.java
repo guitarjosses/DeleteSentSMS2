@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final int PERMISSION_REQUEST_SMS = 123 ;
     private EditText txtUsuario;
     private EditText txtContrasenia;
 
@@ -23,6 +26,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+
+            Intent setSmsAppIntent =
+                    new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+            setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+                    getPackageName());
+            startActivityForResult(setSmsAppIntent, PERMISSION_REQUEST_SMS);
+
+        }
 
         txtUsuario = findViewById(R.id.txtUsuario);
         txtContrasenia = findViewById(R.id.txtContrasenia);
